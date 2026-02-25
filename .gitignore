@@ -1,0 +1,46 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.sln.docstates
+.vs/
+*.csproj.user
+
+# Node
+node_modules/
+dist/
+.angular/
+npm-debug.log*
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+*.env.local
+appsettings.*.local.json
+
+# Data
+data/
+postgres_data/
+redis_data/
+minio_data/
+
+# Scraper
+scraper/output/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Coverage
+coverage/

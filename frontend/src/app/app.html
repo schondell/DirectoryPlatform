@@ -1,0 +1,32 @@
+<header class="app-header">
+  <nav>
+    <a routerLink="/" class="logo">DirectoryPlatform</a>
+    <div class="nav-links">
+      <a routerLink="/listings">{{ 'nav.listings' | translate }}</a>
+      @if (authService.isAuthenticated()) {
+        <a routerLink="/member/dashboard">{{ 'nav.dashboard' | translate }}</a>
+        <a routerLink="/member/messages">{{ 'nav.messages' | translate }}</a>
+        @if (authService.userRole() === 'Admin' || authService.userRole() === 'SuperAdmin') {
+          <a routerLink="/admin">{{ 'nav.admin' | translate }}</a>
+        }
+        <button (click)="authService.logout()">{{ 'common.logout' | translate }}</button>
+      } @else {
+        <a routerLink="/auth/login">{{ 'common.login' | translate }}</a>
+        <a routerLink="/auth/register">{{ 'common.register' | translate }}</a>
+      }
+      <app-language-selector />
+    </div>
+  </nav>
+</header>
+
+<main class="app-main">
+  <router-outlet />
+</main>
+
+<footer class="app-footer">
+  <div class="footer-links">
+    <a routerLink="/privacy">Privacy</a>
+    <a routerLink="/terms">Terms</a>
+  </div>
+  <p>&copy; 2026 DirectoryPlatform</p>
+</footer>

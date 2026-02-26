@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace DirectoryPlatform.Infrastructure.Data.Migrations
+namespace DirectoryPlatform.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -158,6 +158,255 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                         .HasDatabaseName("ix_audit_logs_entity_type_entity_id");
 
                     b.ToTable("audit_logs", (string)null);
+                });
+
+            modelBuilder.Entity("DirectoryPlatform.Core.Entities.Bookkeeping.Invoice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("currency");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("due_date");
+
+                    b.Property<string>("InvoiceNumber")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("invoice_number");
+
+                    b.Property<DateTime>("IssueDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("issue_date");
+
+                    b.Property<Guid?>("ListingId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("listing_id");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("text")
+                        .HasColumnName("notes");
+
+                    b.Property<DateTime?>("PaidDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("paid_date");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
+
+                    b.Property<Guid?>("SubscriptionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("subscription_id");
+
+                    b.Property<decimal>("Subtotal")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)")
+                        .HasColumnName("subtotal");
+
+                    b.Property<decimal>("TaxAmount")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)")
+                        .HasColumnName("tax_amount");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)")
+                        .HasColumnName("total_amount");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_invoices");
+
+                    b.HasIndex("InvoiceNumber")
+                        .IsUnique()
+                        .HasDatabaseName("ix_invoices_invoice_number");
+
+                    b.HasIndex("ListingId")
+                        .HasDatabaseName("ix_invoices_listing_id");
+
+                    b.HasIndex("SubscriptionId")
+                        .HasDatabaseName("ix_invoices_subscription_id");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_invoices_user_id");
+
+                    b.ToTable("invoices", (string)null);
+                });
+
+            modelBuilder.Entity("DirectoryPlatform.Core.Entities.Bookkeeping.InvoiceLineItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("integer")
+                        .HasColumnName("display_order");
+
+                    b.Property<Guid>("InvoiceId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("invoice_id");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer")
+                        .HasColumnName("quantity");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)")
+                        .HasColumnName("total_price");
+
+                    b.Property<decimal>("UnitPrice")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)")
+                        .HasColumnName("unit_price");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_invoice_line_items");
+
+                    b.HasIndex("InvoiceId")
+                        .HasDatabaseName("ix_invoice_line_items_invoice_id");
+
+                    b.ToTable("invoice_line_items", (string)null);
+                });
+
+            modelBuilder.Entity("DirectoryPlatform.Core.Entities.Bookkeeping.Payment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)")
+                        .HasColumnName("amount");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("currency");
+
+                    b.Property<Guid>("InvoiceId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("invoice_id");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("text")
+                        .HasColumnName("notes");
+
+                    b.Property<int>("PaymentMethod")
+                        .HasColumnType("integer")
+                        .HasColumnName("payment_method");
+
+                    b.Property<DateTime?>("ProcessedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("processed_at");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
+                        .HasColumnName("status");
+
+                    b.Property<string>("TransactionReference")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("transaction_reference");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_payments");
+
+                    b.HasIndex("InvoiceId")
+                        .HasDatabaseName("ix_payments_invoice_id");
+
+                    b.ToTable("payments", (string)null);
+                });
+
+            modelBuilder.Entity("DirectoryPlatform.Core.Entities.Bookkeeping.PaymentReconciliation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("action");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("text")
+                        .HasColumnName("notes");
+
+                    b.Property<Guid>("PaymentId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("payment_id");
+
+                    b.Property<Guid>("RecordedByUserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("recorded_by_user_id");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_payment_reconciliations");
+
+                    b.HasIndex("PaymentId")
+                        .HasDatabaseName("ix_payment_reconciliations_payment_id");
+
+                    b.HasIndex("RecordedByUserId")
+                        .HasDatabaseName("ix_payment_reconciliations_recorded_by_user_id");
+
+                    b.ToTable("payment_reconciliations", (string)null);
                 });
 
             modelBuilder.Entity("DirectoryPlatform.Core.Entities.Category", b =>
@@ -515,6 +764,68 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                     b.ToTable("listing_attributes", (string)null);
                 });
 
+            modelBuilder.Entity("DirectoryPlatform.Core.Entities.ListingBoost", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<decimal>("AmountPaid")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)")
+                        .HasColumnName("amount_paid");
+
+                    b.Property<int>("BoostType")
+                        .HasColumnType("integer")
+                        .HasColumnName("boost_type");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)")
+                        .HasColumnName("currency");
+
+                    b.Property<DateTime>("ExpiresAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("expires_at");
+
+                    b.Property<Guid>("ListingId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("listing_id");
+
+                    b.Property<double>("Multiplier")
+                        .HasColumnType("double precision")
+                        .HasColumnName("multiplier");
+
+                    b.Property<DateTime>("StartsAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("starts_at");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_listing_boosts");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_listing_boosts_user_id");
+
+                    b.HasIndex("ListingId", "StartsAt", "ExpiresAt")
+                        .HasDatabaseName("ix_listing_boosts_listing_id_starts_at_expires_at");
+
+                    b.ToTable("listing_boosts", (string)null);
+                });
+
             modelBuilder.Entity("DirectoryPlatform.Core.Entities.ListingDetail", b =>
                 {
                     b.Property<Guid>("Id")
@@ -584,6 +895,46 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                     b.ToTable("listing_details", (string)null);
                 });
 
+            modelBuilder.Entity("DirectoryPlatform.Core.Entities.ListingFollower", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("ListingId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("listing_id");
+
+                    b.Property<bool>("NotifyOnUpdate")
+                        .HasColumnType("boolean")
+                        .HasColumnName("notify_on_update");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_listing_followers");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_listing_followers_user_id");
+
+                    b.HasIndex("ListingId", "UserId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_listing_followers_listing_id_user_id");
+
+                    b.ToTable("listing_followers", (string)null);
+                });
+
             modelBuilder.Entity("DirectoryPlatform.Core.Entities.ListingLanguage", b =>
                 {
                     b.Property<Guid>("Id")
@@ -618,6 +969,42 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                         .HasDatabaseName("ix_listing_languages_listing_id_language_id");
 
                     b.ToTable("listing_languages", (string)null);
+                });
+
+            modelBuilder.Entity("DirectoryPlatform.Core.Entities.ListingLike", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("ListingId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("listing_id");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_listing_likes");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_listing_likes_user_id");
+
+                    b.HasIndex("ListingId", "UserId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_listing_likes_listing_id_user_id");
+
+                    b.ToTable("listing_likes", (string)null);
                 });
 
             modelBuilder.Entity("DirectoryPlatform.Core.Entities.ListingMedia", b =>
@@ -668,6 +1055,65 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                         .HasDatabaseName("ix_listing_media_listing_id");
 
                     b.ToTable("listing_media", (string)null);
+                });
+
+            modelBuilder.Entity("DirectoryPlatform.Core.Entities.ListingPageView", b =>
+                {
+                    b.Property<Guid>("ListingId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("listing_id");
+
+                    b.Property<DateTime>("ViewDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("view_date");
+
+                    b.Property<int>("ViewCount")
+                        .HasColumnType("integer")
+                        .HasColumnName("view_count");
+
+                    b.HasKey("ListingId", "ViewDate")
+                        .HasName("pk_listing_page_views");
+
+                    b.ToTable("listing_page_views", (string)null);
+                });
+
+            modelBuilder.Entity("DirectoryPlatform.Core.Entities.ListingVisitor", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("ListingId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("listing_id");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.Property<DateTime>("VisitedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("visited_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_listing_visitors");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_listing_visitors_user_id");
+
+                    b.HasIndex("ListingId", "UserId")
+                        .HasDatabaseName("ix_listing_visitors_listing_id_user_id");
+
+                    b.ToTable("listing_visitors", (string)null);
                 });
 
             modelBuilder.Entity("DirectoryPlatform.Core.Entities.Message", b =>
@@ -1232,6 +1678,51 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                     b.ToTable("users", (string)null);
                 });
 
+            modelBuilder.Entity("DirectoryPlatform.Core.Entities.VisitorMetric", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("date");
+
+                    b.Property<int>("NewListings")
+                        .HasColumnType("integer")
+                        .HasColumnName("new_listings");
+
+                    b.Property<int>("NewUsers")
+                        .HasColumnType("integer")
+                        .HasColumnName("new_users");
+
+                    b.Property<int>("TotalPageViews")
+                        .HasColumnType("integer")
+                        .HasColumnName("total_page_views");
+
+                    b.Property<int>("UniqueVisitors")
+                        .HasColumnType("integer")
+                        .HasColumnName("unique_visitors");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_visitor_metrics");
+
+                    b.HasIndex("Date")
+                        .IsUnique()
+                        .HasDatabaseName("ix_visitor_metrics_date");
+
+                    b.ToTable("visitor_metrics", (string)null);
+                });
+
             modelBuilder.Entity("DirectoryPlatform.Core.Entities.AttributeDefinition", b =>
                 {
                     b.HasOne("DirectoryPlatform.Core.Entities.Category", "Category")
@@ -1253,6 +1744,79 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                         .HasConstraintName("fk_audit_logs_users_user_id");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DirectoryPlatform.Core.Entities.Bookkeeping.Invoice", b =>
+                {
+                    b.HasOne("DirectoryPlatform.Core.Entities.Listing", "Listing")
+                        .WithMany()
+                        .HasForeignKey("ListingId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("fk_invoices_listings_listing_id");
+
+                    b.HasOne("DirectoryPlatform.Core.Entities.Subscription", "Subscription")
+                        .WithMany()
+                        .HasForeignKey("SubscriptionId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("fk_invoices_subscriptions_subscription_id");
+
+                    b.HasOne("DirectoryPlatform.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_invoices_users_user_id");
+
+                    b.Navigation("Listing");
+
+                    b.Navigation("Subscription");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("DirectoryPlatform.Core.Entities.Bookkeeping.InvoiceLineItem", b =>
+                {
+                    b.HasOne("DirectoryPlatform.Core.Entities.Bookkeeping.Invoice", "Invoice")
+                        .WithMany("LineItems")
+                        .HasForeignKey("InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_invoice_line_items_invoices_invoice_id");
+
+                    b.Navigation("Invoice");
+                });
+
+            modelBuilder.Entity("DirectoryPlatform.Core.Entities.Bookkeeping.Payment", b =>
+                {
+                    b.HasOne("DirectoryPlatform.Core.Entities.Bookkeeping.Invoice", "Invoice")
+                        .WithMany("Payments")
+                        .HasForeignKey("InvoiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_payments_invoices_invoice_id");
+
+                    b.Navigation("Invoice");
+                });
+
+            modelBuilder.Entity("DirectoryPlatform.Core.Entities.Bookkeeping.PaymentReconciliation", b =>
+                {
+                    b.HasOne("DirectoryPlatform.Core.Entities.Bookkeeping.Payment", "Payment")
+                        .WithMany()
+                        .HasForeignKey("PaymentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_payment_reconciliations_payments_payment_id");
+
+                    b.HasOne("DirectoryPlatform.Core.Entities.User", "RecordedByUser")
+                        .WithMany()
+                        .HasForeignKey("RecordedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_payment_reconciliations_users_recorded_by_user_id");
+
+                    b.Navigation("Payment");
+
+                    b.Navigation("RecordedByUser");
                 });
 
             modelBuilder.Entity("DirectoryPlatform.Core.Entities.Category", b =>
@@ -1336,6 +1900,27 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                     b.Navigation("Listing");
                 });
 
+            modelBuilder.Entity("DirectoryPlatform.Core.Entities.ListingBoost", b =>
+                {
+                    b.HasOne("DirectoryPlatform.Core.Entities.Listing", "Listing")
+                        .WithMany()
+                        .HasForeignKey("ListingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_listing_boosts_listings_listing_id");
+
+                    b.HasOne("DirectoryPlatform.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_listing_boosts_users_user_id");
+
+                    b.Navigation("Listing");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("DirectoryPlatform.Core.Entities.ListingDetail", b =>
                 {
                     b.HasOne("DirectoryPlatform.Core.Entities.Listing", "Listing")
@@ -1346,6 +1931,27 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                         .HasConstraintName("fk_listing_details_listings_listing_id");
 
                     b.Navigation("Listing");
+                });
+
+            modelBuilder.Entity("DirectoryPlatform.Core.Entities.ListingFollower", b =>
+                {
+                    b.HasOne("DirectoryPlatform.Core.Entities.Listing", "Listing")
+                        .WithMany()
+                        .HasForeignKey("ListingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_listing_followers_listings_listing_id");
+
+                    b.HasOne("DirectoryPlatform.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_listing_followers_users_user_id");
+
+                    b.Navigation("Listing");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DirectoryPlatform.Core.Entities.ListingLanguage", b =>
@@ -1369,6 +1975,27 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                     b.Navigation("Listing");
                 });
 
+            modelBuilder.Entity("DirectoryPlatform.Core.Entities.ListingLike", b =>
+                {
+                    b.HasOne("DirectoryPlatform.Core.Entities.Listing", "Listing")
+                        .WithMany()
+                        .HasForeignKey("ListingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_listing_likes_listings_listing_id");
+
+                    b.HasOne("DirectoryPlatform.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_listing_likes_users_user_id");
+
+                    b.Navigation("Listing");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("DirectoryPlatform.Core.Entities.ListingMedia", b =>
                 {
                     b.HasOne("DirectoryPlatform.Core.Entities.Listing", "Listing")
@@ -1379,6 +2006,39 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                         .HasConstraintName("fk_listing_media_listings_listing_id");
 
                     b.Navigation("Listing");
+                });
+
+            modelBuilder.Entity("DirectoryPlatform.Core.Entities.ListingPageView", b =>
+                {
+                    b.HasOne("DirectoryPlatform.Core.Entities.Listing", "Listing")
+                        .WithMany()
+                        .HasForeignKey("ListingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_listing_page_views_listings_listing_id");
+
+                    b.Navigation("Listing");
+                });
+
+            modelBuilder.Entity("DirectoryPlatform.Core.Entities.ListingVisitor", b =>
+                {
+                    b.HasOne("DirectoryPlatform.Core.Entities.Listing", "Listing")
+                        .WithMany()
+                        .HasForeignKey("ListingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_listing_visitors_listings_listing_id");
+
+                    b.HasOne("DirectoryPlatform.Core.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_listing_visitors_users_user_id");
+
+                    b.Navigation("Listing");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DirectoryPlatform.Core.Entities.Message", b =>
@@ -1508,6 +2168,13 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
             modelBuilder.Entity("DirectoryPlatform.Core.Entities.AttributeDefinition", b =>
                 {
                     b.Navigation("ListingAttributes");
+                });
+
+            modelBuilder.Entity("DirectoryPlatform.Core.Entities.Bookkeeping.Invoice", b =>
+                {
+                    b.Navigation("LineItems");
+
+                    b.Navigation("Payments");
                 });
 
             modelBuilder.Entity("DirectoryPlatform.Core.Entities.Category", b =>

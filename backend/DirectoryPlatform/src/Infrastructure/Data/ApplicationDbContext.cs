@@ -1,4 +1,5 @@
 using DirectoryPlatform.Core.Entities;
+using DirectoryPlatform.Core.Entities.Bookkeeping;
 using Microsoft.EntityFrameworkCore;
 
 namespace DirectoryPlatform.Infrastructure.Data;
@@ -27,6 +28,20 @@ public class ApplicationDbContext : DbContext
     public DbSet<CouponCode> CouponCodes => Set<CouponCode>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
     public DbSet<ListingApprovalHistory> ListingApprovalHistories => Set<ListingApprovalHistory>();
+
+    // Engagement
+    public DbSet<ListingLike> ListingLikes => Set<ListingLike>();
+    public DbSet<ListingFollower> ListingFollowers => Set<ListingFollower>();
+    public DbSet<ListingPageView> ListingPageViews => Set<ListingPageView>();
+    public DbSet<ListingVisitor> ListingVisitors => Set<ListingVisitor>();
+    public DbSet<VisitorMetric> VisitorMetrics => Set<VisitorMetric>();
+    public DbSet<ListingBoost> ListingBoosts => Set<ListingBoost>();
+
+    // Financial
+    public DbSet<Invoice> Invoices => Set<Invoice>();
+    public DbSet<InvoiceLineItem> InvoiceLineItems => Set<InvoiceLineItem>();
+    public DbSet<Payment> Payments => Set<Payment>();
+    public DbSet<PaymentReconciliation> PaymentReconciliations => Set<PaymentReconciliation>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -223,6 +238,95 @@ public class ApplicationDbContext : DbContext
             entity.HasIndex(e => e.ListingId);
             entity.HasOne(e => e.Listing).WithMany(l => l.ApprovalHistory).HasForeignKey(e => e.ListingId).OnDelete(DeleteBehavior.Cascade);
             entity.HasOne(e => e.ReviewedByUser).WithMany().HasForeignKey(e => e.ReviewedByUserId).OnDelete(DeleteBehavior.SetNull);
+        });
+
+        // ListingLike
+        modelBuilder.Entity<ListingLike>(entity =>
+        {
+            entity.HasIndex(e => new { e.ListingId, e.UserId }).IsUnique();
+            entity.HasOne(e => e.Listing).WithMany().HasForeignKey(e => e.ListingId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(e => e.User).WithMany().HasForeignKey(e => e.UserId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // ListingFollower
+        modelBuilder.Entity<ListingFollower>(entity =>
+        {
+            entity.HasIndex(e => new { e.ListingId, e.UserId }).IsUnique();
+            entity.HasOne(e => e.Listing).WithMany().HasForeignKey(e => e.ListingId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(e => e.User).WithMany().HasForeignKey(e => e.UserId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // ListingPageView — composite key
+        modelBuilder.Entity<ListingPageView>(entity =>
+        {
+            entity.HasKey(e => new { e.ListingId, e.ViewDate });
+            entity.HasOne(e => e.Listing).WithMany().HasForeignKey(e => e.ListingId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // ListingVisitor
+        modelBuilder.Entity<ListingVisitor>(entity =>
+        {
+            entity.HasIndex(e => new { e.ListingId, e.UserId });
+            entity.HasOne(e => e.Listing).WithMany().HasForeignKey(e => e.ListingId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(e => e.User).WithMany().HasForeignKey(e => e.UserId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // VisitorMetric
+        modelBuilder.Entity<VisitorMetric>(entity =>
+        {
+            entity.HasIndex(e => e.Date).IsUnique();
+        });
+
+        // ListingBoost
+        modelBuilder.Entity<ListingBoost>(entity =>
+        {
+            entity.HasIndex(e => new { e.ListingId, e.StartsAt, e.ExpiresAt });
+            entity.Property(e => e.AmountPaid).HasPrecision(10, 2);
+            entity.Property(e => e.Currency).HasMaxLength(10);
+            entity.HasOne(e => e.Listing).WithMany().HasForeignKey(e => e.ListingId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(e => e.User).WithMany().HasForeignKey(e => e.UserId).OnDelete(DeleteBehavior.Cascade);
+            entity.Ignore(e => e.IsActive);
+        });
+
+        // Invoice
+        modelBuilder.Entity<Invoice>(entity =>
+        {
+            entity.HasIndex(e => e.InvoiceNumber).IsUnique();
+            entity.HasIndex(e => e.UserId);
+            entity.Property(e => e.InvoiceNumber).HasMaxLength(50);
+            entity.Property(e => e.Subtotal).HasPrecision(10, 2);
+            entity.Property(e => e.TaxAmount).HasPrecision(10, 2);
+            entity.Property(e => e.TotalAmount).HasPrecision(10, 2);
+            entity.Property(e => e.Currency).HasMaxLength(10);
+            entity.HasOne(e => e.User).WithMany().HasForeignKey(e => e.UserId).OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne(e => e.Listing).WithMany().HasForeignKey(e => e.ListingId).OnDelete(DeleteBehavior.SetNull);
+            entity.HasOne(e => e.Subscription).WithMany().HasForeignKey(e => e.SubscriptionId).OnDelete(DeleteBehavior.SetNull);
+        });
+
+        // InvoiceLineItem
+        modelBuilder.Entity<InvoiceLineItem>(entity =>
+        {
+            entity.Property(e => e.UnitPrice).HasPrecision(10, 2);
+            entity.Property(e => e.TotalPrice).HasPrecision(10, 2);
+            entity.HasOne(e => e.Invoice).WithMany(i => i.LineItems).HasForeignKey(e => e.InvoiceId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // Payment
+        modelBuilder.Entity<Payment>(entity =>
+        {
+            entity.HasIndex(e => e.InvoiceId);
+            entity.Property(e => e.Amount).HasPrecision(10, 2);
+            entity.Property(e => e.Currency).HasMaxLength(10);
+            entity.Property(e => e.TransactionReference).HasMaxLength(256);
+            entity.HasOne(e => e.Invoice).WithMany(i => i.Payments).HasForeignKey(e => e.InvoiceId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        // PaymentReconciliation
+        modelBuilder.Entity<PaymentReconciliation>(entity =>
+        {
+            entity.Property(e => e.Action).HasMaxLength(100);
+            entity.HasOne(e => e.Payment).WithMany().HasForeignKey(e => e.PaymentId).OnDelete(DeleteBehavior.Cascade);
+            entity.HasOne(e => e.RecordedByUser).WithMany().HasForeignKey(e => e.RecordedByUserId).OnDelete(DeleteBehavior.Restrict);
         });
     }
 

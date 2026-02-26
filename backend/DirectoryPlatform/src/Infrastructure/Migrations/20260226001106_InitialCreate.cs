@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace DirectoryPlatform.Infrastructure.Data.Migrations
+namespace DirectoryPlatform.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -179,6 +179,24 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                         principalTable: "users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "visitor_metrics",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    unique_visitors = table.Column<int>(type: "integer", nullable: false),
+                    total_page_views = table.Column<int>(type: "integer", nullable: false),
+                    new_users = table.Column<int>(type: "integer", nullable: false),
+                    new_listings = table.Column<int>(type: "integer", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_visitor_metrics", x => x.id);
                 });
 
             migrationBuilder.CreateTable(
@@ -429,6 +447,39 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "listing_boosts",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    listing_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    boost_type = table.Column<int>(type: "integer", nullable: false),
+                    starts_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    expires_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    multiplier = table.Column<double>(type: "double precision", nullable: false),
+                    amount_paid = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
+                    currency = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_listing_boosts", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_listing_boosts_listings_listing_id",
+                        column: x => x.listing_id,
+                        principalTable: "listings",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_listing_boosts_users_user_id",
+                        column: x => x.user_id,
+                        principalTable: "users",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "listing_details",
                 columns: table => new
                 {
@@ -453,6 +504,34 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                         name: "fk_listing_details_listings_listing_id",
                         column: x => x.listing_id,
                         principalTable: "listings",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "listing_followers",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    listing_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    notify_on_update = table.Column<bool>(type: "boolean", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_listing_followers", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_listing_followers_listings_listing_id",
+                        column: x => x.listing_id,
+                        principalTable: "listings",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_listing_followers_users_user_id",
+                        column: x => x.user_id,
+                        principalTable: "users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -485,6 +564,33 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "listing_likes",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    listing_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_listing_likes", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_listing_likes_listings_listing_id",
+                        column: x => x.listing_id,
+                        principalTable: "listings",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_listing_likes_users_user_id",
+                        column: x => x.user_id,
+                        principalTable: "users",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "listing_media",
                 columns: table => new
                 {
@@ -505,6 +611,53 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                         name: "fk_listing_media_listings_listing_id",
                         column: x => x.listing_id,
                         principalTable: "listings",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "listing_page_views",
+                columns: table => new
+                {
+                    listing_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    view_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    view_count = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_listing_page_views", x => new { x.listing_id, x.view_date });
+                    table.ForeignKey(
+                        name: "fk_listing_page_views_listings_listing_id",
+                        column: x => x.listing_id,
+                        principalTable: "listings",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "listing_visitors",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    listing_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    visited_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_listing_visitors", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_listing_visitors_listings_listing_id",
+                        column: x => x.listing_id,
+                        principalTable: "listings",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_listing_visitors_users_user_id",
+                        column: x => x.user_id,
+                        principalTable: "users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -578,6 +731,131 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "invoices",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    invoice_number = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    listing_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    subscription_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    subtotal = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
+                    tax_amount = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
+                    total_amount = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
+                    currency = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
+                    status = table.Column<int>(type: "integer", nullable: false),
+                    issue_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    due_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    paid_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    notes = table.Column<string>(type: "text", nullable: true),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_invoices", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_invoices_listings_listing_id",
+                        column: x => x.listing_id,
+                        principalTable: "listings",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "fk_invoices_subscriptions_subscription_id",
+                        column: x => x.subscription_id,
+                        principalTable: "subscriptions",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "fk_invoices_users_user_id",
+                        column: x => x.user_id,
+                        principalTable: "users",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "invoice_line_items",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    invoice_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    description = table.Column<string>(type: "text", nullable: false),
+                    quantity = table.Column<int>(type: "integer", nullable: false),
+                    unit_price = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
+                    total_price = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
+                    display_order = table.Column<int>(type: "integer", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_invoice_line_items", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_invoice_line_items_invoices_invoice_id",
+                        column: x => x.invoice_id,
+                        principalTable: "invoices",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "payments",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    invoice_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    amount = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
+                    currency = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
+                    payment_method = table.Column<int>(type: "integer", nullable: false),
+                    status = table.Column<int>(type: "integer", nullable: false),
+                    transaction_reference = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
+                    notes = table.Column<string>(type: "text", nullable: true),
+                    processed_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_payments", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_payments_invoices_invoice_id",
+                        column: x => x.invoice_id,
+                        principalTable: "invoices",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "payment_reconciliations",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    payment_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    recorded_by_user_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    action = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    notes = table.Column<string>(type: "text", nullable: true),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_payment_reconciliations", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_payment_reconciliations_payments_payment_id",
+                        column: x => x.payment_id,
+                        principalTable: "payments",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_payment_reconciliations_users_recorded_by_user_id",
+                        column: x => x.recorded_by_user_id,
+                        principalTable: "users",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "ix_attribute_definitions_category_id_slug",
                 table: "attribute_definitions",
@@ -612,6 +890,32 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "ix_invoice_line_items_invoice_id",
+                table: "invoice_line_items",
+                column: "invoice_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_invoices_invoice_number",
+                table: "invoices",
+                column: "invoice_number",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ix_invoices_listing_id",
+                table: "invoices",
+                column: "listing_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_invoices_subscription_id",
+                table: "invoices",
+                column: "subscription_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_invoices_user_id",
+                table: "invoices",
+                column: "user_id");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_languages_code",
                 table: "languages",
                 column: "code",
@@ -638,10 +942,31 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                 column: "listing_id");
 
             migrationBuilder.CreateIndex(
+                name: "ix_listing_boosts_listing_id_starts_at_expires_at",
+                table: "listing_boosts",
+                columns: new[] { "listing_id", "starts_at", "expires_at" });
+
+            migrationBuilder.CreateIndex(
+                name: "ix_listing_boosts_user_id",
+                table: "listing_boosts",
+                column: "user_id");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_listing_details_listing_id",
                 table: "listing_details",
                 column: "listing_id",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ix_listing_followers_listing_id_user_id",
+                table: "listing_followers",
+                columns: new[] { "listing_id", "user_id" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ix_listing_followers_user_id",
+                table: "listing_followers",
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_listing_languages_language_id",
@@ -655,9 +980,30 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "ix_listing_likes_listing_id_user_id",
+                table: "listing_likes",
+                columns: new[] { "listing_id", "user_id" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ix_listing_likes_user_id",
+                table: "listing_likes",
+                column: "user_id");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_listing_media_listing_id",
                 table: "listing_media",
                 column: "listing_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_listing_visitors_listing_id_user_id",
+                table: "listing_visitors",
+                columns: new[] { "listing_id", "user_id" });
+
+            migrationBuilder.CreateIndex(
+                name: "ix_listing_visitors_user_id",
+                table: "listing_visitors",
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_listings_category_id",
@@ -703,6 +1049,21 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                 name: "ix_notifications_user_id_is_read",
                 table: "notifications",
                 columns: new[] { "user_id", "is_read" });
+
+            migrationBuilder.CreateIndex(
+                name: "ix_payment_reconciliations_payment_id",
+                table: "payment_reconciliations",
+                column: "payment_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_payment_reconciliations_recorded_by_user_id",
+                table: "payment_reconciliations",
+                column: "recorded_by_user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_payments_invoice_id",
+                table: "payments",
+                column: "invoice_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_regions_parent_id",
@@ -768,6 +1129,12 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                 table: "users",
                 column: "username",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "ix_visitor_metrics_date",
+                table: "visitor_metrics",
+                column: "date",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -777,25 +1144,46 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                 name: "audit_logs");
 
             migrationBuilder.DropTable(
+                name: "invoice_line_items");
+
+            migrationBuilder.DropTable(
                 name: "listing_approval_histories");
 
             migrationBuilder.DropTable(
                 name: "listing_attributes");
 
             migrationBuilder.DropTable(
+                name: "listing_boosts");
+
+            migrationBuilder.DropTable(
                 name: "listing_details");
+
+            migrationBuilder.DropTable(
+                name: "listing_followers");
 
             migrationBuilder.DropTable(
                 name: "listing_languages");
 
             migrationBuilder.DropTable(
+                name: "listing_likes");
+
+            migrationBuilder.DropTable(
                 name: "listing_media");
+
+            migrationBuilder.DropTable(
+                name: "listing_page_views");
+
+            migrationBuilder.DropTable(
+                name: "listing_visitors");
 
             migrationBuilder.DropTable(
                 name: "messages");
 
             migrationBuilder.DropTable(
                 name: "notifications");
+
+            migrationBuilder.DropTable(
+                name: "payment_reconciliations");
 
             migrationBuilder.DropTable(
                 name: "pricing_tiers");
@@ -807,7 +1195,7 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                 name: "subscription_features");
 
             migrationBuilder.DropTable(
-                name: "subscriptions");
+                name: "visitor_metrics");
 
             migrationBuilder.DropTable(
                 name: "attribute_definitions");
@@ -816,19 +1204,28 @@ namespace DirectoryPlatform.Infrastructure.Data.Migrations
                 name: "languages");
 
             migrationBuilder.DropTable(
+                name: "payments");
+
+            migrationBuilder.DropTable(
+                name: "invoices");
+
+            migrationBuilder.DropTable(
                 name: "listings");
 
             migrationBuilder.DropTable(
-                name: "coupon_codes");
-
-            migrationBuilder.DropTable(
-                name: "subscription_tiers");
+                name: "subscriptions");
 
             migrationBuilder.DropTable(
                 name: "categories");
 
             migrationBuilder.DropTable(
                 name: "regions");
+
+            migrationBuilder.DropTable(
+                name: "coupon_codes");
+
+            migrationBuilder.DropTable(
+                name: "subscription_tiers");
 
             migrationBuilder.DropTable(
                 name: "users");

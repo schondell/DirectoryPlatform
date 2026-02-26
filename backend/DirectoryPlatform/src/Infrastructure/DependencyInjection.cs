@@ -32,6 +32,11 @@ public static class DependencyInjection
         services.AddScoped<IMessageRepository, MessageRepository>();
         services.AddScoped<INotificationRepository, NotificationRepository>();
         services.AddScoped<ISubscriptionRepository, SubscriptionRepository>();
+        services.AddScoped<IListingEngagementRepository, ListingEngagementRepository>();
+        services.AddScoped<IVisitorMetricRepository, VisitorMetricRepository>();
+        services.AddScoped<IBoostRepository, BoostRepository>();
+        services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+        services.AddScoped<IPaymentRepository, PaymentRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         // S3/MinIO

@@ -25,8 +25,8 @@ npm-debug.log*
 *.env.local
 appsettings.*.local.json
 
-# Data
-data/
+# Data (Docker volumes only)
+/data/
 postgres_data/
 redis_data/
 minio_data/

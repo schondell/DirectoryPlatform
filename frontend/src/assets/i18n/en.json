@@ -29,7 +29,8 @@
     "reset": "Reset",
     "close": "Close",
     "viewAll": "View All",
-    "readMore": "Read More"
+    "readMore": "Read More",
+    "allCategories": "All Categories"
   },
   "nav": {
     "home": "Home",
@@ -113,6 +114,16 @@
     "message": "Message",
     "send": "Send",
     "noMessages": "No messages"
+  },
+  "footer": {
+    "tagline": "Switzerland's premier classified ads platform. Buy and sell with confidence.",
+    "platform": "Platform",
+    "legal": "Legal",
+    "contact": "Contact",
+    "pricing": "Pricing",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "imprint": "Imprint"
   },
   "subscription": {
     "plans": "Subscription Plans",

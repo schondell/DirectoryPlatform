@@ -234,3 +234,199 @@ export interface DashboardStats {
   totalReviews: number;
   activeSubscriptions: number;
 }
+
+// Engagement
+export interface ListingEngagement {
+  likeCount: number;
+  followerCount: number;
+  hasUserLiked: boolean;
+  isUserFollowing: boolean;
+}
+
+export interface LikedListing {
+  listingId: string;
+  title: string;
+  likedAt: string;
+}
+
+export interface FollowedListing {
+  listingId: string;
+  title: string;
+  notifyOnUpdate: boolean;
+  followedAt: string;
+}
+
+export interface PageViewStats {
+  totalViews: number;
+  dailyViews: DailyView[];
+}
+
+export interface DailyView {
+  date: string;
+  viewCount: number;
+}
+
+export interface VisitorStats {
+  totalVisitors: number;
+  uniqueVisitors: number;
+  recentVisitors: Visitor[];
+}
+
+export interface Visitor {
+  userId: string;
+  userName?: string;
+  visitedAt: string;
+}
+
+// Boost
+export interface Boost {
+  id: string;
+  listingId: string;
+  boostType: string;
+  startsAt: string;
+  expiresAt: string;
+  multiplier: number;
+  amountPaid: number;
+  currency: string;
+  isActive: boolean;
+}
+
+export interface BoostPricing {
+  boostType: string;
+  dailyRate: number;
+  multiplier: number;
+  description: string;
+}
+
+export interface CreateBoost {
+  listingId: string;
+  boostType: string;
+  durationDays: number;
+}
+
+// Bookkeeping
+export interface Invoice {
+  id: string;
+  invoiceNumber: string;
+  userId: string;
+  userName?: string;
+  listingId?: string;
+  subscriptionId?: string;
+  subtotal: number;
+  taxAmount: number;
+  totalAmount: number;
+  currency: string;
+  status: string;
+  issueDate: string;
+  dueDate: string;
+  paidDate?: string;
+  notes?: string;
+  lineItems: InvoiceLineItem[];
+  payments: Payment[];
+}
+
+export interface InvoiceLineItem {
+  id: string;
+  description: string;
+  quantity: number;
+  unitPrice: number;
+  totalPrice: number;
+}
+
+export interface Payment {
+  id: string;
+  invoiceId: string;
+  amount: number;
+  currency: string;
+  paymentMethod: string;
+  status: string;
+  transactionReference?: string;
+  notes?: string;
+  processedAt?: string;
+  createdAt: string;
+}
+
+// Admin Dashboard
+export interface AdminDashboard {
+  overview: OverviewMetrics;
+  recentActivity: RecentActivity;
+  systemHealth: SystemHealth;
+}
+
+export interface OverviewMetrics {
+  totalUsers: number;
+  totalListings: number;
+  activeListings: number;
+  pendingApprovals: number;
+  monthlyRevenue: number;
+  newUsersThisMonth: number;
+  newListingsThisMonth: number;
+}
+
+export interface RecentActivity {
+  recentUsers: RecentUser[];
+  recentListings: RecentListing[];
+}
+
+export interface RecentUser {
+  id: string;
+  username: string;
+  email: string;
+  createdAt: string;
+}
+
+export interface RecentListing {
+  id: string;
+  title: string;
+  categoryName?: string;
+  status: string;
+  createdAt: string;
+}
+
+export interface SystemHealth {
+  cpuUsagePercent: number;
+  memoryUsageMB: number;
+  memoryTotalMB: number;
+  dotNetVersion: string;
+  osPlatform: string;
+  uptime: string;
+}
+
+// User KPI
+export interface UserKpiDashboard {
+  summary: KpiSummary;
+  viewsOverTime: KpiTimeSeries[];
+  likesOverTime: KpiTimeSeries[];
+  messagesOverTime: KpiTimeSeries[];
+  revenueOverTime: KpiTimeSeries[];
+  categoryPerformance: CategoryPerformance[];
+}
+
+export interface KpiSummary {
+  totalListings: number;
+  activeListings: number;
+  totalViews: number;
+  totalLikes: number;
+  totalFollowers: number;
+  totalMessages: number;
+  averageRating: number;
+  responseRate: number;
+  averageResponseTime: string;
+  totalRevenue: number;
+  viewsTrend: number;
+  likesTrend: number;
+  messagesTrend: number;
+}
+
+export interface KpiTimeSeries {
+  date: string;
+  value: number;
+}
+
+export interface CategoryPerformance {
+  categoryName: string;
+  listingCount: number;
+  totalViews: number;
+  totalLikes: number;
+  averageRating: number;
+}

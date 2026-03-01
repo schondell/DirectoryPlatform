@@ -15,4 +15,7 @@
   <Folder Name="/src/Infrastructure/">
     <Project Path="src/Infrastructure/DirectoryPlatform.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/DirectoryPlatform.Tests/DirectoryPlatform.Tests.csproj" />
+  </Folder>
 </Solution>

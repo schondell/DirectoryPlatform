@@ -11,7 +11,8 @@ export const ADMIN_ROUTES: Routes = [
       { path: 'approval', loadComponent: () => import('./approval/approval.component').then(m => m.ApprovalComponent) },
       { path: 'categories', loadComponent: () => import('./categories/categories.component').then(m => m.AdminCategoriesComponent) },
       { path: 'attribute-definitions', loadComponent: () => import('./attribute-definitions/attribute-definitions.component').then(m => m.AttributeDefinitionsComponent) },
-      { path: 'audit', loadComponent: () => import('./audit/audit.component').then(m => m.AuditComponent) }
+      { path: 'audit', loadComponent: () => import('./audit/audit.component').then(m => m.AuditComponent) },
+      { path: 'scraper-analytics', loadComponent: () => import('./scraper-analytics/scraper-analytics.component').then(m => m.ScraperAnalyticsComponent) }
     ]
   }
 ];

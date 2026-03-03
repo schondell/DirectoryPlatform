@@ -1,6 +1,7 @@
 using Amazon.S3;
 using DirectoryPlatform.Contracts.Services;
 using DirectoryPlatform.Core.Interfaces;
+using DirectoryPlatform.Core.Settings;
 using DirectoryPlatform.Infrastructure.Data;
 using DirectoryPlatform.Infrastructure.Repositories;
 using DirectoryPlatform.Infrastructure.Services;
@@ -17,6 +18,11 @@ public static class DependencyInjection
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"))
                    .UseSnakeCaseNamingConvention());
+
+        // Scraper DB — read-only, no migrations
+        services.AddDbContext<ScraperDbContext>(options =>
+            options.UseNpgsql(configuration.GetConnectionString("ScraperConnection"))
+                   .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
 
         // Repositories
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
@@ -37,6 +43,7 @@ public static class DependencyInjection
         services.AddScoped<IBoostRepository, BoostRepository>();
         services.AddScoped<IInvoiceRepository, InvoiceRepository>();
         services.AddScoped<IPaymentRepository, PaymentRepository>();
+        services.AddScoped<IScraperAnalyticsRepository, ScraperAnalyticsRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         // S3/MinIO
@@ -56,6 +63,10 @@ public static class DependencyInjection
 
         // Email
         services.AddScoped<IEmailService, EmailService>();
+
+        // Anthropic / Claude AI
+        services.Configure<AnthropicSettings>(configuration.GetSection("Anthropic"));
+        services.AddHttpClient<IClaudeService, ClaudeService>();
 
         return services;
     }

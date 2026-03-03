@@ -9,6 +9,7 @@ export const MEMBER_ROUTES: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', loadComponent: () => import('./dashboard/dashboard.component').then(m => m.MemberDashboardComponent) },
       { path: 'listings', loadComponent: () => import('./listings/listings.component').then(m => m.MemberListingsComponent) },
+      { path: 'listings/create', loadComponent: () => import('./create-listing/create-listing.component').then(m => m.CreateListingComponent) },
       { path: 'messages', loadComponent: () => import('./messages/messages.component').then(m => m.MessagesComponent) },
       { path: 'notifications', loadComponent: () => import('./notifications/notifications.component').then(m => m.NotificationsComponent) },
       { path: 'profile', loadComponent: () => import('./profile/profile.component').then(m => m.ProfileComponent) },

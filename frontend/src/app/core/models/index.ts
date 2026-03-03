@@ -430,3 +430,143 @@ export interface CategoryPerformance {
   totalLikes: number;
   averageRating: number;
 }
+
+// Scraper Analytics
+export interface ScraperAnalyticsDashboard {
+  overview: ScraperOverview;
+  lifecycle: LifecycleEntry[];
+  velocity: VelocityEntry[];
+  dealers: DealerEntry[];
+  reposts: RepostEntry[];
+  paidVsFree: PaidVsFreeEntry[];
+  priceDistribution: PriceDistributionEntry[];
+  geographic: GeoEntry[];
+  freshness: ScraperFreshness;
+}
+
+export interface ScraperOverview {
+  total: number;
+  active: number;
+  expired: number;
+  paid: number;
+  withPhone: number;
+  withImages: number;
+  uniquePhones: number;
+  categories: number;
+  oldestListing?: string;
+  newestListing?: string;
+}
+
+export interface LifecycleEntry {
+  category: string;
+  expiredCount: number;
+  avgDaysAlive: number;
+  minDays: number;
+  maxDays: number;
+  medianDays: number;
+}
+
+export interface VelocityEntry {
+  category: string;
+  totalListings: number;
+  last7d: number;
+  last24h: number;
+  avgPerDay: number;
+}
+
+export interface DealerEntry {
+  phone: string;
+  listingCount: number;
+  categoryCount: number;
+  paidCount: number;
+  activeCount: number;
+  pseudos: string[];
+  locations: string[];
+}
+
+export interface RepostEntry {
+  phone: string;
+  category?: string;
+  repostCount: number;
+  avgHoursBetween?: number;
+  sampleTitle?: string;
+}
+
+export interface PaidVsFreeEntry {
+  isPaid: boolean;
+  paidType?: string;
+  count: number;
+  active: number;
+  expired: number;
+  avgDaysAlive?: number;
+  withPhone: number;
+  avgImages: number;
+}
+
+export interface PriceDistributionEntry {
+  category: string;
+  count: number;
+  avg: number;
+  median: number;
+  min: number;
+  max: number;
+}
+
+export interface GeoEntry {
+  location: string;
+  listingCount: number;
+  active: number;
+  uniqueSellers: number;
+}
+
+export interface ScraperFreshness {
+  totalActive: number;
+  seen24h: number;
+  seen7d: number;
+  seen30d: number;
+  stale30d: number;
+  avgDaysSinceSeen: number;
+}
+
+// AI Listing
+export interface AiGenerateListingRequest {
+  categoryId: string;
+  userInput: string;
+  language: string;
+}
+
+export interface AiImproveListingRequest {
+  categoryId: string;
+  title: string;
+  description: string;
+  language: string;
+}
+
+export interface AiGeneratedListing {
+  title: string;
+  shortDescription: string;
+  description: string;
+  suggestedPriceMin?: number;
+  suggestedPriceMax?: number;
+  attributes: AiSuggestedAttribute[];
+}
+
+export interface AiSuggestedAttribute {
+  attributeDefinitionId: string;
+  name: string;
+  value: string;
+}
+
+export interface CreateListingRequest {
+  title: string;
+  shortDescription?: string;
+  description?: string;
+  categoryId: string;
+  regionId?: string;
+  town?: string;
+  isFeatured: boolean;
+  isPremium: boolean;
+  weight: number;
+  detail?: ListingDetail;
+  attributes: { attributeDefinitionId: string; value: string }[];
+}

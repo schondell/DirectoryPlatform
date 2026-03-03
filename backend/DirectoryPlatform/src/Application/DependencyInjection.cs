@@ -27,6 +27,8 @@ public static class DependencyInjection
         services.AddScoped<IBookkeepingService, BookkeepingService>();
         services.AddScoped<IAdminDashboardService, AdminDashboardService>();
         services.AddScoped<IUserKpiService, UserKpiService>();
+        services.AddScoped<IScraperAnalyticsService, ScraperAnalyticsService>();
+        services.AddScoped<IAiListingService, AiListingService>();
 
         return services;
     }
